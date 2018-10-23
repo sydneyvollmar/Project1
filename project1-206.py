@@ -10,7 +10,17 @@ def getData(file):
 #Ouput: return a list of dictionary objects where
 #the keys are from the first row in the data. and the values are each of the other rows
 
-	pass
+	inFile = open(file)
+	line = inFile.readline()
+
+	# list of dictionaries
+	lstDict = []
+
+	# while there is a line
+	while line:
+		dict = {}
+		values = line.split(",")
+
 
 def mySort(data,col):
 # Sort based on key/column
