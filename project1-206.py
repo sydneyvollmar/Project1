@@ -3,6 +3,7 @@ import filecmp
 from dateutil.relativedelta import *
 from datetime import date
 
+# Sydney Vollmar
 
 def getData(file):
 # get a list of dictionary objects from the file
@@ -21,7 +22,7 @@ def getData(file):
 	h2 = headers[1]
 	h3 = headers[2]
 	h4 = headers[3]
-	h5 = headers[4]
+	h5 = headers[4].strip()
 
 	# move on from first line before collecting data
 	line = inFile.readline()
@@ -55,10 +56,17 @@ def mySort(data,col):
 #Input: list of dictionaries and col (key) to sort on
 #Output: Return the first item in the sorted list as a string of just: firstName lastName
 
+	# sort based on key given in parameters
 	newLst = sorted(data, key = lambda d : d[col])
+
+	# get first dictionary in list
 	firstDict = newLst[0]
+
+	# assign first dictionary in list to vals of first and last name
 	firstName = firstDict['First']
 	lastName = firstDict['Last']
+
+	# return desired formatting correctly sorted
 	return firstName + " " + lastName
 
 
@@ -69,7 +77,30 @@ def classSizes(data):
 # descending order
 # [('Senior', 26), ('Junior', 25), ('Freshman', 21), ('Sophomore', 18)]
 
-	pass
+	# empty dictionary for holding only classes/grades
+	sortClass = {}
+
+	# loops through each dictionary in list
+	for d in data:
+		grade = d['Class']
+		# if class already in the new dictionary, increase the count
+		if grade in sortClass:
+			sortClass[grade] += 1
+		# if class is not in new dictionary, start count at 1
+		else:
+			sortClass[grade] = 1
+
+	# new list to add new tuples to
+	lstClass = []
+	for elem in sortClass:
+		# creates tuples with desired info from classes dicitonary
+		lstClass.append((elem, sortClass[elem]))
+
+	# sorts tuples from greatest to least
+	lstSorted = sorted(lstClass, key = lambda d : d[1], reverse = True)
+
+	# returns list of tuples
+	return lstSorted
 
 
 def findMonth(a):
@@ -77,7 +108,30 @@ def findMonth(a):
 # Input: list of dictionaries
 # Output: Return the month (1-12) that had the most births in the data
 
-	pass
+	# new dictionary to use for months
+	sortMonths = {}
+
+	# index through dictionaries in the list given
+	for d in a:
+		dob = d['DOB']
+		# splits dob at each / to get just the month
+		month = dob.split("/")[0]
+		# if month in dictionary, increase count by 1
+		if month in sortMonths:
+			sortMonths[month] += 1
+		# if month not in new dictionary, start count at 1
+		else:
+			sortMonths[month] = 1
+
+	lstMonths = []
+	# index through elements in diciontary of month totals
+	for elem in sortMonths:
+		lstMonths.append((elem, sortMonths[elem]))
+
+	# sorts the new list of months from highest to lowest frequency month
+	lstSorted = sorted(lstMonths, key = lambda d : d[1], reverse = True)
+
+	return int(lstSorted[0][0])
 
 def mySortPrint(a,col,fileName):
 #Similar to mySort, but instead of returning single
@@ -86,7 +140,17 @@ def mySortPrint(a,col,fileName):
 #Input: list of dictionaries, col (key) to sort by and output file name
 #Output: No return value, but the file is written
 
-	pass
+	# sorts list given by dictionary key given
+	newLst = sorted(a, key = lambda d : d[col])
+
+	# says writing to this particular file name
+	outFile = open(fileName, "w")
+
+	# loops through each dictionary in sorted list and outputs correct info
+	for student in newLst:
+		outFile.write(student['First'] + ',' + student['Last'] + ',' + student['Email'] + '\n')
+
+	outFile.close()
 
 def findAge(a):
 # def findAge(a):
@@ -97,14 +161,12 @@ def findAge(a):
 
 	pass
 
-# getData("P1DataA.csv")
-# print(mySort(getData("P1DataA.csv"), "First"))
 
 ################################################################
 ## DO NOT MODIFY ANY CODE BELOW THIS
 ################################################################
 
-## We have provided simple test() function used in main() to print what each function returns vs. what it's supposed to return.
+# We have provided simple test() function used in main() to print what each function returns vs. what it's supposed to return.
 def test(got, expected, pts):
   score = 0;
   if got == expected:
